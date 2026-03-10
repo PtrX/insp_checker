@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hyundai EV Inspektions-Checkliste</title>
+<style>
+:root {
+  --primary: #003366;
+  --primary-light: #004d99;
+  --primary-dark: #002244;
+  --accent: #00aaff;
+  --accent-light: #e6f5ff;
+  --bg: #f4f7fa;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --text-muted: #5a6a7e;
+  --border: #d0d8e0;
+  --green: #16a34a;
+  --green-bg: #dcfce7;
+  --yellow: #ca8a04;
+  --yellow-bg: #fef9c3;
+  --red: #dc2626;
+  --red-bg: #fee2e2;
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(0,51,102,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,51,102,0.12);
+  --font: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; }
+
+.header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--primary-light));
+  color: white; padding: 20px 24px 14px;
+  position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-lg);
+}
+.header h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.3px; }
+.header-sub { font-size: 0.78rem; opacity: 0.75; margin-top: 2px; }
+
+.tabs-bar {
+  display: flex; align-items: center; gap: 4px; margin-top: 12px;
+  overflow-x: auto; padding-bottom: 2px; scrollbar-width: none;
+}
+.tabs-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,0.2); border-bottom: none;
+  border-radius: 8px 8px 0 0; padding: 7px 14px; font-size: 0.82rem;
+  font-family: var(--font); cursor: pointer; white-space: nowrap;
+  display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+}
+.tab-btn:hover { background: rgba(255,255,255,0.25); }
+.tab-btn.active { background: var(--bg); color: var(--primary); font-weight: 600; }
+.tab-close { background: none; border: none; color: inherit; font-size: 1rem; cursor: pointer; opacity: 0.6; padding: 0 2px; line-height: 1; }
+.tab-close:hover { opacity: 1; }
+.tab-add {
+  background: rgba(255,255,255,0.1); color: white;
+  border: 1px dashed rgba(255,255,255,0.4); border-radius: 8px 8px 0 0;
+  padding: 7px 12px; font-size: 1rem; cursor: pointer; font-family: var(--font); transition: all 0.2s;
+}
+.tab-add:hover { background: rgba(255,255,255,0.25); }
+
+.content { max-width: 960px; margin: 0 auto; padding: 20px 16px 40px; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.card {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 20px; margin-bottom: 16px; border: 1px solid var(--border);
+}
+.card-title {
+  font-size: 0.95rem; font-weight: 700; color: var(--primary);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+}
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+.form-group { display: flex; flex-direction: column; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label {
+  font-size: 0.78rem; font-weight: 600; color: var(--text-muted);
+  margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.3px;
+}
+.form-group input, .form-group select, .form-group textarea {
+  border: 1.5px solid var(--border); border-radius: 7px; padding: 9px 12px;
+  font-size: 0.9rem; font-family: var(--font); color: var(--text); background: white; transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,170,255,0.12);
+}
+.form-group textarea { resize: vertical; min-height: 60px; }
+.ez-row { display: flex; gap: 8px; }
+.ez-row select { flex: 1; }
+
+.ampel {
+  display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+  border-radius: var(--radius); font-weight: 600; font-size: 0.95rem;
+}
+.ampel-green { background: var(--green-bg); color: var(--green); border: 2px solid var(--green); }
+.ampel-yellow { background: var(--yellow-bg); color: var(--yellow); border: 2px solid var(--yellow); }
+.ampel-red { background: var(--red-bg); color: var(--red); border: 2px solid var(--red); }
+.ampel-dot {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;
+}
+.ampel-green .ampel-dot { background: var(--green); color: white; }
+.ampel-yellow .ampel-dot { background: var(--yellow); color: white; }
+.ampel-red .ampel-dot { background: var(--red); color: white; }
+
+.table-wrap { overflow-x: auto; margin: 0 -20px; padding: 0 20px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th {
+  text-align: left; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.4px; color: var(--text-muted); padding: 8px 10px;
+  border-bottom: 2px solid var(--border); white-space: nowrap;
+}
+td { padding: 10px 10px; border-bottom: 1px solid #eef1f5; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover { background: #f8fafc; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px;
+  border-radius: 20px; font-size: 0.76rem; font-weight: 600; white-space: nowrap;
+}
+.badge-ok { background: var(--green-bg); color: var(--green); }
+.badge-warn { background: var(--yellow-bg); color: var(--yellow); }
+.badge-overdue { background: var(--red-bg); color: var(--red); }
+
+.cost-box { display: flex; gap: 12px; flex-wrap: wrap; }
+.cost-item { flex: 1; min-width: 200px; padding: 14px 18px; border-radius: var(--radius); text-align: center; }
+.cost-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
+.cost-value { font-size: 1.5rem; font-weight: 800; margin-top: 4px; }
+.cost-open { background: var(--red-bg); }
+.cost-open .cost-value { color: var(--red); }
+.cost-next { background: var(--accent-light); }
+.cost-next .cost-value { color: var(--primary); }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+.empty-state .icon { font-size: 2.5rem; margin-bottom: 10px; }
+
+/* Scheckheft */
+.sh-group { margin-bottom: 22px; }
+.sh-header {
+  font-size: 0.88rem; font-weight: 700; color: var(--primary);
+  padding: 8px 0 6px; border-bottom: 2px solid var(--primary); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sh-row {
+  display: flex; align-items: center; gap: 8px; padding: 7px 0;
+  border-bottom: 1px solid #eef1f5; flex-wrap: wrap;
+}
+.sh-row:last-child { border-bottom: none; }
+.sh-num {
+  font-size: 0.78rem; font-weight: 700; color: white; background: var(--primary);
+  width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0;
+}
+.sh-due {
+  font-size: 0.78rem; color: var(--text-muted); min-width: 150px; flex-shrink: 0; line-height: 1.3;
+}
+.sh-due strong { color: var(--text); font-weight: 600; }
+.sh-inputs { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+.sh-inputs select, .sh-inputs input {
+  border: 1.5px solid var(--border); border-radius: 6px; padding: 5px 7px;
+  font-size: 0.8rem; font-family: var(--font); color: var(--text); background: white;
+}
+.sh-inputs select:focus, .sh-inputs input:focus { outline: none; border-color: var(--accent); }
+.sh-inputs select.sh-month { width: 62px; }
+.sh-inputs select.sh-year { width: 78px; }
+.sh-inputs input[type="number"] { width: 95px; }
+.sh-inputs .sh-sep { color: var(--text-muted); font-size: 0.75rem; }
+.sh-result {
+  font-size: 0.75rem; font-weight: 600; padding: 3px 9px; border-radius: 5px; white-space: nowrap;
+}
+.sh-result-ok { background: var(--green-bg); color: var(--green); }
+.sh-result-late { background: var(--red-bg); color: var(--red); }
+.sh-result-future { background: #f0f0f0; color: #aaa; }
+.sh-result-missing { background: var(--yellow-bg); color: var(--yellow); }
+
+@media (max-width: 640px) {
+  .sh-row { flex-direction: column; align-items: flex-start; gap: 5px; padding: 10px 0; }
+  .sh-due { min-width: unset; }
+}
+@media print {
+  .header { position: static; }
+  .tab-add, .tab-close { display: none; }
+  .card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🔋 Hyundai EV Inspektions-Checkliste</h1>
+  <div class="header-sub">IONIQ 5 · Kona EV · Wartungsplaner & Kostenrechner</div>
+  <div class="tabs-bar" id="tabsBar"></div>
+</div>
+<div class="content" id="contentArea"></div>
+
+<script>
+const MODELS = {
+  'ioniq5':   { label: 'IONIQ 5',                    inspM:24, inspKm:30000, filterM:24, filterKm:30000, brakeM:24, klimaM:24, hasKlima:true },
+  'kona_old': { label: 'Kona EV alt (OS, bis 2022)', inspM:12, inspKm:15000, filterM:12, filterKm:15000, brakeM:24, klimaM:null, hasKlima:false },
+  'kona_new': { label: 'Kona EV neu (SX2, ab 2023)', inspM:24, inspKm:30000, filterM:24, filterKm:30000, brakeM:24, klimaM:null, hasKlima:false },
+};
+const COSTS = { inspektion:[150,200], bremsfluessigkeit:[50,70], filter:[30,50], klima:[40,60], huau:[80,120] };
+const SVCS = [
+  { key:'insp',  label:'🔧 Jahresinspektion',  ck:'inspektion',       iv:c=>({m:c.inspM,km:c.inspKm}),   hasKm:true },
+  { key:'brake', label:'💧 Bremsflüssigkeit',  ck:'bremsfluessigkeit', iv:c=>({m:c.brakeM,km:null}),       hasKm:false },
+  { key:'filter',label:'🌬️ Innenraumfilter',   ck:'filter',           iv:c=>({m:c.filterM,km:c.filterKm}),hasKm:true },
+  { key:'klima', label:'❄️ Klima-Desinfektion', ck:'klima',            iv:c=>({m:c.klimaM,km:null}),       hasKm:false, cond:c=>c.hasKlima },
+  { key:'huau',  label:'🛡️ HU/AU (TÜV)',       ck:'huau',             isHU:true,                          hasKm:false },
+];
+
+let tabs=[], activeTabId=null, nextId=1;
+
+function createTab(){
+  const id=nextId++;
+  tabs.push({id, name:'Fahrzeug '+id, model:'ioniq5', bez:'', ezMonth:'', ezYear:'', km:'', preis:'', notiz:'', sh:{}});
+  activeTabId=id; render();
+}
+function removeTab(id){ if(tabs.length<=1)return; tabs=tabs.filter(t=>t.id!==id); if(activeTabId===id)activeTabId=tabs[0].id; render(); }
+function getTab(id){ return tabs.find(t=>t.id===id); }
+function addM(d,m){ const r=new Date(d); r.setMonth(r.getMonth()+m); return r; }
+function mDiff(a,b){ return (b.getFullYear()-a.getFullYear())*12+(b.getMonth()-a.getMonth()); }
+function fD(d){ return d?d.toLocaleDateString('de-DE',{month:'2-digit',year:'numeric'}):'–'; }
+function fK(n){ return n!=null?Number(n).toLocaleString('de-DE')+' km':'–'; }
+function fEur(n){ return n!=null?Number(n).toLocaleString('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0})+' €':'–'; }
+function fEurRange(a,b){ return a!=null&&b!=null?Number(a).toLocaleString('de-DE')+'–'+Number(b).toLocaleString('de-DE')+' €':'–'; }
+function esc(s){ return s==null?'':String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function getCycles(ez, svc, cfg, now){
+  const cycles=[];
+  if(svc.isHU){
+    let d=addM(ez,36), n=1;
+    cycles.push({n,due:d,dueKm:null});
+    while(d<addM(now,36)){ d=addM(addM(ez,36),24*n); n++; cycles.push({n,due:d,dueKm:null}); if(n>20)break; }
+  } else {
+    const v=svc.iv(cfg); if(!v)return cycles;
+    let n=1;
+    while(true){ const d=addM(ez,v.m*n), k=v.km?v.km*n:null; cycles.push({n,due:d,dueKm:k}); if(d>addM(now,36)||n>30)break; n++; }
+  }
+  return cycles;
+}
+
+function getEntry(tab, key, n){
+  const p=key+'_'+n;
+  return { m:tab.sh[p+'_m']||'', y:tab.sh[p+'_y']||'', km:tab.sh[p+'_km']||'' };
+}
+
+function checkOnTime(cycle, e){
+  if(!e.m||!e.y) return null;
+  const done=new Date(parseInt(e.y), parseInt(e.m)-1, 1);
+  const tOk=mDiff(cycle.due, done)<=1;
+  let kOk=true;
+  if(cycle.dueKm!=null && e.km){ kOk=(parseInt(e.km)-cycle.dueKm)<=500; }
+  return tOk && kOk;
+}
+
+function getNextDue(cycles, tab, svcKey, now, km){
+  for(const c of cycles){
+    const e=getEntry(tab, svcKey, c.n);
+    if(!e.m||!e.y){
+      const ml=mDiff(now,c.due), kl=c.dueKm!=null?c.dueKm-km:null;
+      let st='ok';
+      if(ml<0||(kl!==null&&kl<0)) st='overdue';
+      else if(ml<3||(kl!==null&&kl<3000)) st='warn';
+      return {...c, ml, kl, st};
+    }
+  }
+  return null;
+}
+
+function shUp(tid, path, val){ const t=getTab(tid); if(!t.sh)t.sh={}; t.sh[path]=val; render(); }
+
+function render(){
+  const tb=document.getElementById('tabsBar');
+  let th='';
+  for(const t of tabs){
+    const a=t.id===activeTabId, nm=t.bez||t.name;
+    th+=`<button class="tab-btn ${a?'active':''}" onclick="activeTabId=${t.id};render()"><span>${esc(nm)}</span>${tabs.length>1?`<span class="tab-close" onclick="event.stopPropagation();removeTab(${t.id})">×</span>`:''}</button>`;
+  }
+  th+=`<button class="tab-add" onclick="createTab()" title="Neues Fahrzeug">＋</button>`;
+  tb.innerHTML=th;
+
+  const area=document.getElementById('contentArea');
+  let html='';
+  for(const t of tabs) html+=`<div class="tab-content ${t.id===activeTabId?'active':''}">${renderTab(t)}</div>`;
+  area.innerHTML=html;
+}
+
+function mSel(name, val, tid){
+  let h=`<select class="sh-month" onchange="shUp(${tid},'${name}',this.value)"><option value="">MM</option>`;
+  for(let i=1;i<=12;i++){ const m=String(i).padStart(2,'0'); h+=`<option value="${m}"${val===m?' selected':''}>${m}</option>`; }
+  return h+'</select>';
+}
+function ySel(name, val, tid, sy){
+  const ey=new Date().getFullYear()+2;
+  let h=`<select class="sh-year" onchange="shUp(${tid},'${name}',this.value)"><option value="">JJJJ</option>`;
+  for(let y=sy;y<=ey;y++) h+=`<option value="${y}"${val===String(y)?' selected':''}>${y}</option>`;
+  return h+'</select>';
+}
+
+function renderTab(tab){
+  const cfg=MODELS[tab.model]; let h='';
+
+  h+=`<div class="card"><div class="card-title">🚗 Fahrzeugdaten</div><div class="form-grid">
+    <div class="form-group"><label>Modell</label>
+      <select onchange="getTab(${tab.id}).model=this.value;getTab(${tab.id}).sh={};render()">
+        ${Object.entries(MODELS).map(([k,v])=>`<option value="${k}"${tab.model===k?' selected':''}>${v.label}</option>`).join('')}
+      </select></div>
+    <div class="form-group"><label>Bezeichnung / Angebot</label>
+      <input type="text" placeholder="z.B. Kona Weiß 64kWh" value="${esc(tab.bez)}" oninput="getTab(${tab.id}).bez=this.value;updName(${tab.id})"></div>
+    <div class="form-group"><label>Erstzulassung</label><div class="ez-row">
+      <select onchange="getTab(${tab.id}).ezMonth=this.value;render()"><option value="">Monat</option>
+        ${[...Array(12)].map((_,i)=>{const m=String(i+1).padStart(2,'0');return`<option value="${m}"${tab.ezMonth===m?' selected':''}>${m}</option>`;}).join('')}</select>
+      <select onchange="getTab(${tab.id}).ezYear=this.value;render()"><option value="">Jahr</option>
+        ${[...Array(9)].map((_,i)=>{const y=String(2018+i);return`<option value="${y}"${tab.ezYear===y?' selected':''}>${y}</option>`;}).join('')}</select>
+    </div></div>
+    <div class="form-group"><label>Aktueller KM-Stand</label>
+      <input type="text" inputmode="numeric" placeholder="z.B. 45.000" value="${tab.km?Number(tab.km).toLocaleString('de-DE'):''}" onfocus="this.value=getTab(${tab.id}).km||''" onblur="getTab(${tab.id}).km=this.value.replace(/\\D/g,'');this.value=this.value?Number(this.value.replace(/\\D/g,'')).toLocaleString('de-DE'):'';render()" onkeydown="if(event.key==='Enter'){this.blur();}"></div>
+    <div class="form-group"><label>Kaufpreis (optional)</label>
+      <input type="text" inputmode="numeric" placeholder="z.B. 25.000 €" value="${tab.preis?Number(tab.preis).toLocaleString('de-DE')+' €':''}" onfocus="this.value=getTab(${tab.id}).preis||''" onblur="getTab(${tab.id}).preis=this.value.replace(/\\D/g,'');this.value=this.value?Number(this.value.replace(/\\D/g,'')).toLocaleString('de-DE')+' €':''"></div>
+    <div class="form-group full"><label>Notizen</label>
+      <textarea placeholder="Ausstattung, Zustand, Händler…" oninput="getTab(${tab.id}).notiz=this.value">${esc(tab.notiz)}</textarea></div>
+  </div></div>`;
+
+  if(!tab.ezMonth||!tab.ezYear){
+    return h+`<div class="card"><div class="empty-state"><div class="icon">📋</div><p>Erstzulassung eingeben, um die Wartungsübersicht zu sehen.</p></div></div>`;
+  }
+
+  const ez=new Date(parseInt(tab.ezYear),parseInt(tab.ezMonth)-1,1), now=new Date(), km=parseInt(tab.km)||0, sy=parseInt(tab.ezYear);
+  const active=SVCS.filter(s=>!s.cond||s.cond(cfg));
+  const results=[];
+
+  for(const svc of active){
+    const cycles=getCycles(ez,svc,cfg,now);
+    const nd=getNextDue(cycles,tab,svc.key,now,km);
+    const c=COSTS[svc.ck];
+    results.push({svc, cycles, nd, cMin:c[0], cMax:c[1]});
+  }
+
+  // Ampel
+  const hasOD=results.some(r=>r.nd&&r.nd.st==='overdue');
+  const hasW=results.some(r=>r.nd&&r.nd.st==='warn');
+  let aLvl,aIcn,aTxt;
+  if(hasOD){aLvl='red';aIcn='✗';aTxt='Überfällige Wartungen vorhanden – zeitnah Werkstatt aufsuchen!';}
+  else if(hasW){aLvl='yellow';aIcn='⚠';aTxt='Wartungen stehen bald an – Werkstatttermin planen.';}
+  else{aLvl='green';aIcn='✓';aTxt='Alle Wartungen im grünen Bereich. 👍';}
+
+  h+=`<div class="card"><div class="ampel ampel-${aLvl}"><div class="ampel-dot">${aIcn}</div><div>${aTxt}</div></div></div>`;
+
+  // Kosten
+  let oMin=0,oMax=0,nMin=0,nMax=0;
+  for(const r of results){
+    if(r.nd&&(r.nd.st==='overdue'||r.nd.st==='warn')){oMin+=r.cMin;oMax+=r.cMax;}
+    if(r.nd&&r.nd.ml<=24){nMin+=r.cMin;nMax+=r.cMax;}
+  }
+  h+=`<div class="card"><div class="card-title">💰 Kostenübersicht</div><div class="cost-box">
+    <div class="cost-item cost-open"><div class="cost-label">Offene / überfällige Wartung</div><div class="cost-value">ca. ${fEurRange(oMin,oMax)}</div></div>
+    <div class="cost-item cost-next"><div class="cost-label">Erwartete Kosten nächste 24 Monate</div><div class="cost-value">ca. ${fEurRange(nMin,nMax)}</div></div>
+  </div></div>`;
+
+  // Service-Tabelle
+  h+=`<div class="card"><div class="card-title">📋 Nächste Fälligkeiten – ${cfg.label}</div><div class="table-wrap"><table>
+    <thead><tr><th>Service</th><th>Fällig am</th><th>Fällig bei km</th><th>Verbleibend</th><th>Status</th><th>Kosten ca.</th></tr></thead><tbody>`;
+  for(const r of results){
+    const n=r.nd; if(!n)continue;
+    const bc=n.st==='ok'?'badge-ok':n.st==='warn'?'badge-warn':'badge-overdue';
+    const bt=n.st==='ok'?'✓ Ausstehend':n.st==='warn'?'⚠ Bald fällig':'✗ Überfällig';
+    const rem=[]; if(n.ml!=null)rem.push(n.ml+' Mon.'); if(n.kl!=null)rem.push(fK(n.kl));
+    h+=`<tr><td><strong>${r.svc.label}</strong></td><td>${fD(n.due)}</td><td>${n.dueKm!=null?fK(n.dueKm):'–'}</td>
+      <td>${rem.join(' / ')||'–'}</td><td><span class="badge ${bc}">${bt}</span></td><td>${fEurRange(r.cMin,r.cMax)}</td></tr>`;
+  }
+  h+=`</tbody></table></div></div>`;
+
+  // ── SCHECKHEFT ──
+  h+=`<div class="card"><div class="card-title">📖 Scheckheft – Wartungshistorie</div>
+    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;">
+      Alle Intervalle seit Erstzulassung. Trage ein, wann und bei welchem KM-Stand die Wartung tatsächlich durchgeführt wurde.<br>
+      <strong>Toleranz:</strong> +1 Monat / +500 km gelten noch als fristgerecht. ✅
+    </p>`;
+
+  for(const r of results){
+    const past=r.cycles.filter(c=>c.due<=addM(now,3));
+    if(!past.length) continue;
+    h+=`<div class="sh-group"><div class="sh-header">${r.svc.label}</div>`;
+
+    for(const c of past){
+      const e=getEntry(tab, r.svc.key, c.n);
+      const isFut=c.due>now;
+      let dueStr='<strong>'+fD(c.due)+'</strong>';
+      if(c.dueKm!=null) dueStr+='<br>oder '+fK(c.dueKm);
+
+      // Result badge
+      let badge='';
+      if(e.m&&e.y){
+        const ok=checkOnTime(c,e);
+        badge=ok?'<span class="sh-result sh-result-ok">✓ Fristgerecht</span>':'<span class="sh-result sh-result-late">✗ Verspätet</span>';
+      } else if(isFut){
+        badge='<span class="sh-result sh-result-future">⏳ Noch nicht fällig</span>';
+      } else {
+        badge='<span class="sh-result sh-result-missing">⚠ Offen</span>';
+      }
+
+      const p=r.svc.key+'_'+c.n;
+      h+=`<div class="sh-row">
+        <span class="sh-num">${c.n}</span>
+        <span class="sh-due">${dueStr}</span>
+        <div class="sh-inputs">
+          ${mSel(p+'_m', e.m, tab.id)}
+          <span class="sh-sep">/</span>
+          ${ySel(p+'_y', e.y, tab.id, sy)}
+          <input type="text" inputmode="numeric" placeholder="km" value="${e.km?Number(e.km).toLocaleString('de-DE'):''}" onfocus="this.value=this.getAttribute('data-raw')||''" onblur="var v=this.value.replace(/\\D/g,'');shUp(${tab.id},'${p}_km',v);this.value=v?Number(v).toLocaleString('de-DE'):''" data-raw="${esc(e.km)}" onkeydown="if(event.key==='Enter'){this.blur();}">
+        </div>
+        ${badge}
+      </div>`;
+    }
+    h+=`</div>`;
+  }
+  h+=`</div>`;
+
+  // Intervall-Info
+  h+=`<div class="card" style="background:#f0f4f8;border-style:dashed;">
+    <div class="card-title" style="font-size:0.85rem;">ℹ️ Wartungsintervalle ${cfg.label}</div>
+    <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.7;">
+      Jahresinspektion: alle ${cfg.inspM} Monate oder ${fK(cfg.inspKm)} · 
+      Bremsflüssigkeit: alle ${cfg.brakeM} Monate · 
+      Innenraumfilter: alle ${cfg.filterM} Monate oder ${fK(cfg.filterKm)}
+      ${cfg.hasKlima?' · Klima-Desinfektion: alle '+cfg.klimaM+' Monate (optional)':''} · 
+      HU/AU: erstmals 36 Monate, dann alle 24 Monate
+    </div>
+  </div>`;
+
+  return h;
+}
+
+function updName(id){ const t=getTab(id); t.name=t.bez||'Fahrzeug '+id;
+  const bs=document.querySelectorAll('.tab-btn span:first-child'), i=tabs.findIndex(x=>x.id===id);
+  if(bs[i])bs[i].textContent=t.name;
+}
+
+createTab();
+</script>
+</body>
+</html>
