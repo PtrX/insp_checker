@@ -1,6 +1,10 @@
 # Hyundai EV Inspektions-Checkliste
 
-Ein browserbasiertes Wartungsplanungs-Tool für Hyundai-Elektrofahrzeuge (IONIQ 5, Kona EV). Entwickelt gemeinsam mit Claude AI.
+Ein browserbasiertes Wartungsplanungs-Tool für Hyundai-Elektrofahrzeuge wie IONIQ 5 und Kona EV. Das Tool berechnet kommende Wartungen, zeigt überfällige Positionen und hilft dabei, Garantie-relevante Serviceintervalle im Blick zu behalten.
+
+## Warum dieses Projekt existiert
+
+EV-Wartungsintervalle sind nicht schwer, aber im Alltag leicht zu übersehen: Kilometerstand, Zulassungsdatum, HU/AU, Klimaservice und erledigte Scheckheft-Einträge liegen oft an unterschiedlichen Stellen. Dieses kleine Tool bündelt diese Informationen in einer lokal laufenden Checkliste.
 
 ## Funktionen
 
@@ -38,3 +42,13 @@ HU/AU (TÜV): erstmals nach 36 Monaten, dann alle 24 Monate.
 ## Technik
 
 Reine HTML/CSS/JavaScript-Einzeldatei, kein Build-Prozess, keine externen Abhängigkeiten. Daten werden nur im Browser-Speicher gehalten (kein Server, kein Login).
+
+## Datenschutz
+
+Alle Eingaben bleiben lokal im Browser. Es gibt keinen Server, kein Tracking und keine Synchronisierung.
+
+## Lessons Learned
+
+- Kleine Alltagsprobleme profitieren oft mehr von einer fokussierten Einzeldatei-App als von einem schweren Framework.
+- Wartungslogik sollte transparent im UI sichtbar sein, weil Nutzer die berechneten Fristen nachvollziehen wollen.
+- Lokale Speicherung ist für persönliche Fahrzeugdaten ein sinnvoller Default, solange keine Team- oder Multi-Device-Synchronisierung gebraucht wird.
